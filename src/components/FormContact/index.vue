@@ -63,7 +63,7 @@
                     <v-text-field
                       v-model="editedItem.email"
                       label="Correo electronico"
-                        prepend-icon="mdi-email"
+                      prepend-icon="mdi-email"
                       :rules="Rules"
                     ></v-text-field>
                   </v-col>
@@ -73,7 +73,16 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-
+              <v-snackbar
+                v-model="snackbar"
+                color="green"
+                :timeout="2000"
+                absolute
+                bottom
+                left
+              >
+                {{ textSnackbar }}
+              </v-snackbar>
               <v-btn color="blue darken-1" text @click="close">
                 Cancelar
               </v-btn>
@@ -128,6 +137,8 @@
 export default {
   data: () => ({
     dialog: false,
+    snackbar: false,
+    textSnackbar: "",
     dialogDelete: false,
     search: "",
     filter: {},
@@ -266,7 +277,12 @@ export default {
       } else {
         this.desserts.push(this.editedItem);
       }
-      this.close();
+      this.textSnackbar = "Contacto guardado";
+      this.snackbar = true;
+       setTimeout(() => {
+            this.close();
+          }, 1000);
+     
     },
   },
 };
