@@ -1,7 +1,13 @@
 <!-- @format -->
 
 <template>
-  <v-data-table :headers="headers" :items="desserts" class="elevation-12">
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+    :search="search"
+    :sort-by="sortBy.toLowerCase()"
+    class="elevation-12"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -81,8 +87,23 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+      <v-col cols="12" sm="12">
+        <v-text-field
+          v-model="search"
+          clearable
+          flat
+          solo-inverted
+          hide-details
+          prepend-inner-icon="mdi-magnify"
+          label="Buscar contacto"
+        ></v-text-field>
+      </v-col>
     </template>
-
+    <template v-slot:item.actions="{ item }">
+      <v-btn x-small class="mx-2" fab color="blue" @click="editItem(item)">
+        <v-icon color="white"> mdi-pencil </v-icon>
+      </v-btn>
+    </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresca </v-btn>
     </template>
@@ -114,18 +135,19 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
-      phone: "",
-      birth_date: "",
-      direction: "",
-      email: "",
+      phone: 0,
+      birth_date: 0,
+      direction: 0,
+      email: 0,
     },
     defaultItem: {
       name: "",
-      phone: "",
-      birth_date: "",
-      direction: "",
-      email: "",
+      phone: 0,
+      birth_date: 0,
+      direction: 0,
+      email: 0,
     },
+    keys: ["Nombre", "Telefono", "Correo electronico"],
   }),
 
   computed: {
@@ -179,6 +201,20 @@ export default {
           email: "antgonzales@gmail.com",
         },
       ];
+    },
+
+    editItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
 
     save() {
