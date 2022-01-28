@@ -1,13 +1,87 @@
 <!-- @format -->
 
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="desserts"
-    :sort-by="sortBy.toLowerCase()"
-    class="elevation-12"
-  >
-   
+  <v-data-table :headers="headers" :items="desserts" class="elevation-12">
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="mx-2" fab dark v-bind="attrs" v-on="on">
+              <v-icon dark> mdi-plus </v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Nombre"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.phone"
+                      label="Telefono"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.birth_date"
+                      label="Fecha Nacimiento"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.direction"
+                      label="Direccion"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.email"
+                      label="Correo electronico"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn color="blue darken-1" text @click="close">
+                Cancelar
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="save"> Guardar </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="text-h5">
+              Quieres eliminar este contacto?</v-card-title
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete"
+                >Cancel</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                >OK</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
 
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresca </v-btn>
@@ -40,19 +114,18 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
-      phone: 0,
-      birth_date: 0,
-      direction: 0,
-      email: 0,
+      phone: "",
+      birth_date: "",
+      direction: "",
+      email: "",
     },
     defaultItem: {
       name: "",
-      phone: 0,
-      birth_date: 0,
-      direction: 0,
-      email: 0,
+      phone: "",
+      birth_date: "",
+      direction: "",
+      email: "",
     },
-    keys: ["Nombre", "Telefono", "Correo electronico"],
   }),
 
   computed: {
@@ -108,7 +181,14 @@ export default {
       ];
     },
 
-    
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      } else {
+        this.desserts.push(this.editedItem);
+      }
+      this.close();
+    },
   },
 };
 </script>
