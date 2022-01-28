@@ -103,6 +103,9 @@
       <v-btn x-small class="mx-2" fab color="blue" @click="editItem(item)">
         <v-icon color="white"> mdi-pencil </v-icon>
       </v-btn>
+      <v-btn x-small class="mx-2" fab color="red" @click="deleteItem(item)">
+        <v-icon color="white"> mdi-delete </v-icon>
+      </v-btn>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize"> Refresca </v-btn>
@@ -135,19 +138,18 @@ export default {
     editedIndex: -1,
     editedItem: {
       name: "",
-      phone: 0,
-      birth_date: 0,
-      direction: 0,
-      email: 0,
+      phone: "",
+      birth_date: "",
+      direction: "",
+      email: "",
     },
     defaultItem: {
       name: "",
-      phone: 0,
-      birth_date: 0,
-      direction: 0,
-      email: 0,
+      phone: "",
+      birth_date: "",
+      direction: "",
+      email: "",
     },
-    keys: ["Nombre", "Telefono", "Correo electronico"],
   }),
 
   computed: {
@@ -209,8 +211,27 @@ export default {
       this.dialog = true;
     },
 
+    deleteItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+
+    deleteItemConfirm() {
+      this.desserts.splice(this.editedIndex, 1);
+      this.closeDelete();
+    },
+
     close() {
       this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
