@@ -9,19 +9,30 @@
     class="elevation-12"
   >
     <template v-slot:top>
-      <v-toolbar class="mb-2" color="indigo darken-5" dark>
+      <v-toolbar class="mb-2" color="purple" dark>
         <v-toolbar-title>Registro de contacto</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog
+          transition="fab-transition"
+          v-model="dialog"
+          max-width="500px"
+        >
+          <v-toolbar dark color="purple">
+            <v-toolbar-title>{{formTitle}} </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn icon dark @click="dialog = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="mx-2" fab dark v-bind="attrs" v-on="on">
               <v-icon dark> mdi-plus </v-icon>
             </v-btn>
           </template>
           <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+           
 
             <v-card-text>
               <v-container>
@@ -279,10 +290,9 @@ export default {
       }
       this.textSnackbar = "Contacto guardado";
       this.snackbar = true;
-       setTimeout(() => {
-            this.close();
-          }, 1000);
-     
+      setTimeout(() => {
+        this.close();
+      }, 1000);
     },
   },
 };
