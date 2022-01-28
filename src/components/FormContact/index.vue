@@ -9,7 +9,8 @@
     class="elevation-12"
   >
     <template v-slot:top>
-      <v-toolbar flat>
+      <v-toolbar class="mb-2" color="indigo darken-5" dark>
+        <v-toolbar-title>Registro de contacto</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
@@ -29,30 +30,41 @@
                     <v-text-field
                       v-model="editedItem.name"
                       label="Nombre"
+                      prepend-icon="mdi-account"
+                      :rules="[(v) => !!v || 'Campo Obligatorio *']"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.phone"
                       label="Telefono"
+                      prepend-icon="mdi-cellphone"
+                      type="number"
+                      :rules="numberRule"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.birth_date"
+                      type="date"
                       label="Fecha Nacimiento"
+                      prepend-icon="mdi-calendar"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.direction"
                       label="Direccion"
+                      prepend-icon="mdi-home"
+                      :rules="[(v) => !!v || 'Campo Obligatorio *']"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
                       v-model="editedItem.email"
                       label="Correo electronico"
+                        prepend-icon="mdi-email"
+                      :rules="Rules"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -119,6 +131,16 @@ export default {
     dialogDelete: false,
     search: "",
     filter: {},
+    Rules: [
+      (v) =>
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+        "Ingresa un correo valido",
+    ],
+    numberRule: [
+      (v) => !!v || "Campo Obligatorio *",
+
+      (v) => v.length <= 10 || "debe tener 10 digitos",
+    ],
     sortBy: "name",
     headers: [
       {

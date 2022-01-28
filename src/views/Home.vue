@@ -2,8 +2,6 @@
 
 <template>
   <div>
-    <h1>Registro</h1>
-
     <FormContact />
   </div>
 </template>
